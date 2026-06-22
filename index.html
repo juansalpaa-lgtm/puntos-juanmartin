@@ -353,7 +353,6 @@ function render() {
   renderGroup('manana');
   renderGroup('dia');
   renderGroup('noche');
-  renderGroup('pantallas');
   renderPenalties();
   renderPrizes();
   renderResumen();
@@ -396,22 +395,25 @@ function renderPenalties() {
 }
 
 function renderPrizes() {
-  document.getElementById('prizesContainer').innerHTML = PRIZES.map((p,i) => {
-    const can = state.totalPts >= p.cost;
-    const pct = Math.min(100, Math.round((state.totalPts / p.cost) * 100));
-    const isLeg = p.cost >= 90;
-    return `<div class="prize-card ${isLeg?'legendary':''}">
-      <div class="prize-icon">${p.icon}</div>
-      <div class="prize-info">
-        <div class="prize-name">${p.name} ${isLeg?'🌟':''}</div>
-        ${p.hint ? `<div class="prize-hint">${p.hint}</div>` : ''}
-        <div class="prize-cost">⭐ ${p.cost} puntos ${can ? '— ¡Ya puedes!' : '(te faltan '+(p.cost-state.totalPts)+')'}</div>
-        <div class="prize-progress"><div class="prize-progress-fill" style="width:${pct}%"></div></div>
-      </div>
-      <button class="prize-btn ${can?'can-afford':'cant-afford'}" onclick="${can?`confirmPrize(${i})`:'void(0)'}" ${can?'':'disabled'}>
-        ${can?'🎁 ¡Canjear!':'🔒'}
-      </button>
-    </div>`;
+  document.getElementById('prizesContainer').innerHTML = PRIZES.map(function(p,i) {
+    var can = state.totalPts >= p.cost;
+    var pct = Math.min(100, Math.round((state.totalPts / p.cost) * 100));
+    var isLeg = p.cost >= 90;
+    var hintHtml = p.hint ? '<div class="prize-hint">'+p.hint+'</div>' : '';
+    var costTxt = can ? '— ¡Ya puedes!' : '(te faltan '+(p.cost-state.totalPts)+')';
+    var btnHtml = can
+      ? '<button class="prize-btn can-afford" onclick="confirmPrize('+i+')">🎁 ¡Canjear!</button>'
+      : '<button class="prize-btn cant-afford" disabled>🔒</button>';
+    return '<div class="prize-card '+(isLeg?'legendary':'')+'">'
+      + '<div class="prize-icon">'+p.icon+'</div>'
+      + '<div class="prize-info">'
+      + '<div class="prize-name">'+p.name+(isLeg?' 🌟':'')+'</div>'
+      + hintHtml
+      + '<div class="prize-cost">⭐ '+p.cost+' puntos '+costTxt+'</div>'
+      + '<div class="prize-progress"><div class="prize-progress-fill" style="width:'+pct+'%"></div></div>'
+      + '</div>'
+      + btnHtml
+      + '</div>';
   }).join('');
 }
 
