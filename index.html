@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puntos de Juan Martín ⭐</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sky: #4FC3F7; --sun: #FFD600; --green: #66BB6A;
+    --red: #EF5350; --bg: #E3F2FD; --card: #ffffff;
+    --text: #1A237E; --soft: #90A4AE;
+  }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 40px; }
+
+  header {
+    background: linear-gradient(135deg, #1565C0, #4FC3F7);
+    padding: 18px 16px 24px; text-align: center;
+    border-radius: 0 0 28px 28px;
+    box-shadow: 0 4px 16px rgba(21,101,192,0.3);
+  }
+  header h1 { font-size: 1.6rem; font-weight: 900; color: white; }
+  header .subtitle { font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-top: 2px; }
+  .total-box {
+    margin: 10px auto 0; display: inline-flex; align-items: center;
+    gap: 8px; background: rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 8px 20px;
+  }
+  .total-box .label { color: rgba(255,255,255,0.85); font-size: 0.9rem; }
+  .total-box .pts { color: var(--sun); font-size: 2.2rem; font-weight: 900; line-height: 1; }
+
+  .tabs { display: flex; gap: 8px; padding: 14px 14px 0; justify-content: center; }
+  .tab {
+    flex: 1; max-width: 160px; padding: 10px 0;
+    border-radius: 14px; border: none;
+    font-family: 'Nunito', sans-serif; font-size: 0.88rem; font-weight: 800;
+    cursor: pointer; transition: all 0.2s;
+    background: white; color: var(--soft);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .tab.active { background: var(--text); color: white; transform: translateY(-2px); box-shadow: 0 4px 14px rgba(26,35,126,0.25); }
+
+  .section { display: none; padding: 12px 14px 0; }
+  .section.active { display: block; }
+
+  .day-selector { display: flex; gap: 6px; overflow-x: auto; padding: 10px 0 12px; scrollbar-width: none; }
+  .day-btn {
+    flex-shrink: 0; padding: 8px 14px; border-radius: 20px;
+    border: 2px solid #BBDEFB; background: white;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.82rem;
+    cursor: pointer; color: var(--text); transition: all 0.15s;
+  }
+  .day-btn.active { background: var(--sky); border-color: var(--sky); color: white; }
+
+  .card { background: var(--card); border-radius: 18px; padding: 14px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .card-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); margin-bottom: 10px; }
+
+  .task-row {
+    display: flex; align-items: center; gap: 10px; padding: 10px;
+    border-radius: 12px; margin-bottom: 5px;
+    cursor: pointer; user-select: none; transition: background 0.15s;
+  }
+  .task-row:active { background: #F0F4F8; }
+  .task-icon { font-size: 1.4rem; flex-shrink: 0; width: 34px; text-align: center; }
+  .task-name { flex: 1; font-size: 0.93rem; font-weight: 700; }
+  .task-pts { font-size: 0.82rem; font-weight: 900; padding: 4px 9px; border-radius: 20px; min-width: 44px; text-align: center; }
+  .pts-earn { background: #E8F5E9; color: #2E7D32; }
+  .pts-lose { background: #FFEBEE; color: #C62828; }
+  .check-circle {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 2.5px solid #BDBDBD; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; transition: all 0.2s; font-size: 1rem;
+  }
+  .task-row.done .check-circle { background: var(--green); border-color: var(--green); color: white; }
+  .task-row.done .task-name { text-decoration: line-through; color: #9E9E9E; }
+  .task-row.done .task-pts { opacity: 0.45; }
+
+  .penalty-row { display: flex; align-items: center; gap: 8px; padding: 9px 6px; border-radius: 12px; margin-bottom: 5px; }
+  .penalty-icon { font-size: 1.3rem; width: 34px; text-align: center; flex-shrink: 0; }
+  .penalty-name { flex: 1; font-size: 0.88rem; font-weight: 700; }
+  .penalty-btn {
+    width: 34px; height: 34px; border-radius: 50%; border: none;
+    font-size: 1.1rem; font-weight: 900; cursor: pointer;
+    transition: transform 0.1s; display: flex; align-items: center; justify-content: center;
+  }
+  .penalty-btn:active { transform: scale(0.88); }
+  .pen-add { background: #FFCDD2; color: #C62828; }
+  .pen-sub { background: #F5F5F5; color: #757575; }
+  .pen-count { font-size: 1.1rem; font-weight: 900; min-width: 22px; text-align: center; color: #C62828; }
+
+  /* PRIZES */
+  .prize-card {
+    background: var(--card); border-radius: 18px; padding: 14px;
+    margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .prize-card.legendary {
+    background: linear-gradient(135deg, #FFF8E1, #FFFDE7);
+    border: 2px solid #FFD600;
+    box-shadow: 0 4px 16px rgba(255,214,0,0.25);
+  }
+  .prize-icon { font-size: 2rem; }
+  .prize-info { flex: 1; }
+  .prize-name { font-weight: 800; font-size: 0.97rem; }
+  .prize-hint { font-size: 0.75rem; color: var(--soft); font-weight: 700; margin-top: 1px; font-style: italic; }
+  .prize-cost { font-size: 0.82rem; color: var(--soft); font-weight: 700; margin-top: 3px; }
+  .prize-progress { height: 5px; background: #EEE; border-radius: 10px; margin-top: 6px; overflow: hidden; }
+  .prize-progress-fill { height: 100%; border-radius: 10px; background: var(--sun); transition: width 0.4s; }
+  .prize-btn {
+    padding: 9px 14px; border-radius: 14px; border: none;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.82rem;
+    cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .prize-btn.can-afford { background: var(--sun); color: #5D4037; box-shadow: 0 3px 10px rgba(255,214,0,0.4); }
+  .prize-btn.can-afford:active { transform: scale(0.95); }
+  .prize-btn.cant-afford { background: #F5F5F5; color: #BDBDBD; cursor: not-allowed; }
+
+  /* RESUMEN */
+  .week-summary {
+    background: linear-gradient(135deg, #1565C0, #4FC3F7);
+    border-radius: 18px; padding: 16px; margin-bottom: 12px; color: white; text-align: center;
+  }
+  .week-summary .big { font-size: 2.5rem; font-weight: 900; color: var(--sun); line-height: 1; }
+  .week-summary .sub { font-size: 0.82rem; opacity: 0.88; margin-top: 4px; }
+  .daily-strip { display: flex; gap: 5px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+  .day-dot { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .day-dot .d-label { font-size: 0.62rem; opacity: 0.8; }
+  .day-dot .d-circle {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); display: flex;
+    align-items: center; justify-content: center; font-weight: 900; font-size: 0.78rem;
+  }
+  .day-dot .d-circle.has-pts { background: rgba(255,255,255,0.35); }
+
+  .history-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px;
+    background: white; border-radius: 12px; margin-bottom: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .hist-icon { font-size: 1.2rem; }
+  .hist-info { flex: 1; }
+  .hist-name { font-size: 0.88rem; font-weight: 700; }
+  .hist-day { font-size: 0.72rem; color: var(--soft); }
+  .hist-pts { font-weight: 900; font-size: 0.97rem; }
+  .hist-earn { color: var(--green); }
+  .hist-lose { color: var(--red); }
+  .empty-hist { text-align: center; color: var(--soft); padding: 28px 0; font-size: 0.92rem; }
+
+  /* RESET button - now a real styled button */
+  .danger-zone { margin-top: 16px; padding: 14px; background: white; border-radius: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+  .danger-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); margin-bottom: 10px; }
+  .reset-btn {
+    width: 100%; padding: 13px; border-radius: 14px;
+    border: none; background: #FFEBEE; color: #C62828;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.92rem;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .reset-btn:active { background: #FFCDD2; transform: scale(0.98); }
+
+  /* MODAL */
+  .modal-bg {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 900;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: white; border-radius: 24px; padding: 24px;
+    max-width: 320px; width: 100%; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal .m-icon { font-size: 3rem; margin-bottom: 10px; }
+  .modal h2 { font-size: 1.2rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+  .modal p { font-size: 0.88rem; color: var(--soft); font-weight: 700; line-height: 1.4; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-btns button {
+    flex: 1; padding: 12px; border-radius: 14px; border: none;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.92rem; cursor: pointer;
+  }
+  .btn-cancel { background: #F5F5F5; color: #757575; }
+  .btn-confirm { background: var(--sun); color: #5D4037; }
+  .btn-confirm-red { background: #FFEBEE; color: #C62828; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(90px);
+    background: #1A237E; color: white;
+    padding: 12px 22px; border-radius: 24px;
+    font-weight: 800; font-size: 0.92rem;
+    box-shadow: 0 6px 20px rgba(26,35,126,0.3);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 999; white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⭐ Puntos de Juan Martín</h1>
+  <div class="subtitle">Sofía · Juan · Juan Martín</div>
+  <div class="total-box">
+    <span class="label">Puntos:</span>
+    <span class="pts" id="totalPts">0</span>
+    <span class="label">⭐</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('tareas', this)">✅ Hoy</button>
+  <button class="tab" onclick="showTab('premios', this)">🎁 Premios</button>
+  <button class="tab" onclick="showTab('resumen', this)">📊 Semana</button>
+</div>
+
+<!-- TAREAS -->
+<div class="section active" id="sec-tareas">
+  <div class="day-selector" id="daySel"></div>
+  <div class="card">
+    <div class="card-title">☀️ Rutina de mañana</div>
+    <div id="grp-manana"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🌤️ Durante el día</div>
+    <div id="grp-dia"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🌙 Rutina de noche</div>
+    <div id="grp-noche"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🎮 Pantallas — se ganan con puntos</div>
+    <div id="grp-pantallas"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">⚠️ Puntos que se pierden</div>
+    <div id="grp-multas"></div>
+  </div>
+</div>
+
+<!-- PREMIOS -->
+<div class="section" id="sec-premios">
+  <div style="padding: 4px 0 10px; font-size: 0.85rem; color: var(--soft); font-weight: 700; text-align: center;">
+    Juan Martín tiene <span id="ptsDisplay2" style="color:var(--text); font-size:1.1rem; font-weight:900;">0</span> ⭐ disponibles
+  </div>
+  <div id="prizesContainer"></div>
+</div>
+
+<!-- RESUMEN -->
+<div class="section" id="sec-resumen">
+  <div class="week-summary">
+    <div style="font-size:0.82rem; opacity:0.88; margin-bottom:4px;">Esta semana Juan Martín ganó</div>
+    <div class="big" id="weekTotal">0</div>
+    <div class="sub">puntos ⭐</div>
+    <div class="daily-strip" id="dailyStrip"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 Historial</div>
+    <div id="histContainer"></div>
+  </div>
+  <div class="danger-zone">
+    <div class="danger-title">⚙️ Opciones</div>
+    <button class="reset-btn" onclick="confirmReset()">🔄 Reiniciar semana (nueva semana)</button>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div class="m-icon" id="modal-icon">🎁</div>
+    <h2 id="modal-title">¿Canjear premio?</h2>
+    <p id="modal-body">Texto</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button id="modal-confirm" class="btn-confirm" onclick="">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+
+const TASKS = {
+  manana: [
+    { id:'levantarse', icon:'🛏️', name:'Levantarse juicioso', pts:3 },
+    { id:'dientes_m',  icon:'🪥', name:'Lavarse los dientes', pts:3 },
+    { id:'banarse',    icon:'🚿', name:'Bañarse',             pts:3 },
+    { id:'cambiarse',  icon:'👕', name:'Cambiarse',           pts:3 },
+    { id:'salir',      icon:'🎒', name:'Salir a la actividad juicioso', pts:3 },
+  ],
+  dia: [
+    { id:'almorzar',   icon:'🍽️', name:'Almorzar bien',  pts:3 },
+    { id:'pintar',     icon:'🎨', name:'Pintar',          pts:3 },
+    { id:'tarea',      icon:'📚', name:'Hacer la tarea',  pts:5 },
+  ],
+  noche: [
+    { id:'dientes_n',  icon:'🦷', name:'Lavarse los dientes (noche)', pts:3 },
+    { id:'pijama',     icon:'🌙', name:'Ponerse el pijama',           pts:3 },
+    { id:'banio_noche',icon:'🚽', name:'Ir al baño antes de dormir',  pts:2 },
+    { id:'dormir',     icon:'😴', name:'Dormir juicioso',             pts:4 },
+  ],
+  pantallas: [
+    { id:'nintendo_sab', icon:'🎮', name:'Nintendo – sábado (30 min)',   pts:15, days:[5] },
+    { id:'nintendo_dom', icon:'🎮', name:'Nintendo – domingo (30 min)',   pts:15, days:[6] },
+    { id:'tv',           icon:'📺', name:'Ver TV 1 hora',                pts:10 },
+    { id:'pokemon1',     icon:'⚡', name:'Pokémon GO 30 min (bonus 1)',   pts:8 },
+    { id:'pokemon2',     icon:'⚡', name:'Pokémon GO 30 min (bonus 2)',   pts:8 },
+  ],
+};
+
+const PENALTIES = [
+  { id:'grosero', icon:'😡', name:'Ser grosero',               pts:-4 },
+  { id:'nocaso',  icon:'🙉', name:'No hacer caso a la primera',pts:-3 },
+  { id:'reganio', icon:'😤', name:'Toca regañarlo',            pts:-2 },
+];
+
+const PRIZES = [
+  { icon:'🍦', name:'Helado',             cost:20,  hint:'' },
+  { icon:'🚗', name:'Carrito Hot Wheels', cost:35,  hint:'' },
+  { icon:'🎬', name:'Película en familia',cost:50,  hint:'' },
+  { icon:'⚡', name:'Muñeco Pokémon',     cost:90,  hint:'¡Hay que esforzarse mucho!' },
+];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('jm_puntos_v2');
+    return raw ? JSON.parse(raw) : freshState();
+  } catch(e) { return freshState(); }
+}
+
+function freshState() {
+  return {
+    totalPts: 0,
+    days: DAYS.map(() => ({ tasks:{}, penalties:{} })),
+    history: [],
+    currentDay: todayIdx(),
+  };
+}
+
+function saveState() {
+  localStorage.setItem('jm_puntos_v2', JSON.stringify(state));
+}
+
+function todayIdx() {
+  const d = new Date().getDay();
+  return d === 0 ? 6 : d - 1;
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render() {
+  document.getElementById('totalPts').textContent = state.totalPts;
+  document.getElementById('ptsDisplay2').textContent = state.totalPts;
+  renderDays();
+  renderGroup('manana');
+  renderGroup('dia');
+  renderGroup('noche');
+  renderGroup('pantallas');
+  renderPenalties();
+  renderPrizes();
+  renderResumen();
+}
+
+function renderDays() {
+  document.getElementById('daySel').innerHTML = DAYS.map((d,i) =>
+    `<button class="day-btn ${state.currentDay===i?'active':''}" onclick="selectDay(${i})">${d}</button>`
+  ).join('');
+}
+
+function renderGroup(group) {
+  const el = document.getElementById('grp-' + group);
+  const d = state.currentDay;
+  el.innerHTML = (TASKS[group] || []).map(t => {
+    if (t.days && !t.days.includes(d)) return '';
+    const done = !!state.days[d].tasks[t.id];
+    return `<div class="task-row ${done?'done':''}" onclick="toggleTask('${group}','${t.id}',${t.pts})">
+      <div class="task-icon">${t.icon}</div>
+      <div class="task-name">${t.name}</div>
+      <div class="task-pts pts-earn">+${t.pts}</div>
+      <div class="check-circle">${done?'✓':''}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderPenalties() {
+  const d = state.currentDay;
+  document.getElementById('grp-multas').innerHTML = PENALTIES.map(p => {
+    const cnt = state.days[d].penalties[p.id] || 0;
+    return `<div class="penalty-row">
+      <div class="penalty-icon">${p.icon}</div>
+      <div class="penalty-name">${p.name}</div>
+      <div class="task-pts pts-lose">${p.pts}</div>
+      <button class="penalty-btn pen-sub" onclick="changePenalty('${p.id}',${p.pts},-1)">−</button>
+      <div class="pen-count">${cnt}</div>
+      <button class="penalty-btn pen-add" onclick="changePenalty('${p.id}',${p.pts},1)">+</button>
+    </div>`;
+  }).join('');
+}
+
+function renderPrizes() {
+  document.getElementById('prizesContainer').innerHTML = PRIZES.map((p,i) => {
+    const can = state.totalPts >= p.cost;
+    const pct = Math.min(100, Math.round((state.totalPts / p.cost) * 100));
+    const isLeg = p.cost >= 90;
+    return `<div class="prize-card ${isLeg?'legendary':''}">
+      <div class="prize-icon">${p.icon}</div>
+      <div class="prize-info">
+        <div class="prize-name">${p.name} ${isLeg?'🌟':''}</div>
+        ${p.hint ? `<div class="prize-hint">${p.hint}</div>` : ''}
+        <div class="prize-cost">⭐ ${p.cost} puntos ${can ? '— ¡Ya puedes!' : '(te faltan '+(p.cost-state.totalPts)+')'}</div>
+        <div class="prize-progress"><div class="prize-progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <button class="prize-btn ${can?'can-afford':'cant-afford'}" onclick="${can?`confirmPrize(${i})`:'void(0)'}" ${can?'':'disabled'}>
+        ${can?'🎁 ¡Canjear!':'🔒'}
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function renderResumen() {
+  const dayPts = state.days.map((d) => {
+    const earned = Object.entries(d.tasks).reduce((s,[id,done]) => {
+      if (!done) return s;
+      for (const g of Object.values(TASKS)) {
+        const t = g.find(t => t.id === id);
+        if (t) return s + t.pts;
+      }
+      return s;
+    }, 0);
+    const lost = Object.entries(d.penalties).reduce((s,[id,cnt]) => {
+      const p = PENALTIES.find(p => p.id === id);
+      return p ? s + (p.pts * cnt) : s;
+    }, 0);
+    return earned + lost;
+  });
+
+  document.getElementById('weekTotal').textContent = dayPts.reduce((a,b)=>a+b,0);
+
+  document.getElementById('dailyStrip').innerHTML = DAYS.map((d,i) => `
+    <div class="day-dot">
+      <div class="d-label">${d}</div>
+      <div class="d-circle ${dayPts[i]?'has-pts':''}">${dayPts[i]||'—'}</div>
+    </div>`).join('');
+
+  const hist = [...state.history].reverse().slice(0, 30);
+  const hEl = document.getElementById('histContainer');
+  if (!hist.length) {
+    hEl.innerHTML = '<div class="empty-hist">Aún no hay historial 🌱</div>';
+  } else {
+    hEl.innerHTML = hist.map(h => `
+      <div class="history-item">
+        <div class="hist-icon">${h.icon}</div>
+        <div class="hist-info">
+          <div class="hist-name">${h.name}</div>
+          <div class="hist-day">${DAYS[h.day]}</div>
+        </div>
+        <div class="hist-pts ${h.pts>0?'hist-earn':'hist-lose'}">${h.pts>0?'+':''}${h.pts}</div>
+      </div>`).join('');
+  }
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────
+function selectDay(i) {
+  state.currentDay = i;
+  saveState(); render();
+}
+
+function toggleTask(group, id, pts) {
+  const d = state.currentDay;
+  const wasDone = !!state.days[d].tasks[id];
+  state.days[d].tasks[id] = !wasDone;
+  const delta = wasDone ? -pts : pts;
+  state.totalPts = Math.max(0, state.totalPts + delta);
+  if (!wasDone) {
+    const t = TASKS[group].find(t => t.id === id);
+    state.history.push({ icon: t.icon, name: t.name, pts, day: d, ts: Date.now() });
+    showToast(`+${pts} puntos ⭐`);
+  }
+  saveState(); render();
+}
+
+function changePenalty(id, pts, dir) {
+  const d = state.currentDay;
+  const cur = state.days[d].penalties[id] || 0;
+  const newVal = Math.max(0, cur + dir);
+  const diff = newVal - cur;
+  if (diff === 0) return;
+  state.days[d].penalties[id] = newVal;
+  state.totalPts = Math.max(0, state.totalPts + (pts * diff));
+  if (diff > 0) {
+    const p = PENALTIES.find(p => p.id === id);
+    state.history.push({ icon: p.icon, name: p.name, pts, day: d, ts: Date.now() });
+    showToast(`${pts} pts 😬`);
+  }
+  saveState(); render();
+}
+
+// ── Modal ──────────────────────────────────────────────────────────────────
+let pendingAction = null;
+
+function openModal(icon, title, body, confirmLabel, confirmClass, action) {
+  document.getElementById('modal-icon').textContent = icon;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent = body;
+  const btn = document.getElementById('modal-confirm');
+  btn.textContent = confirmLabel;
+  btn.className = 'btn-confirm ' + confirmClass;
+  pendingAction = action;
+  btn.onclick = () => { closeModal(); pendingAction && pendingAction(); };
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  pendingAction = null;
+}
+
+function confirmPrize(i) {
+  const p = PRIZES[i];
+  openModal(
+    p.icon,
+    `¿Canjear ${p.name}?`,
+    `Se van a usar ${p.cost} puntos. ¡Juan Martín se lo ganó!`,
+    '¡Sí, canjear!', 'btn-confirm',
+    () => redeemPrize(i)
+  );
+}
+
+function redeemPrize(i) {
+  const p = PRIZES[i];
+  if (state.totalPts < p.cost) return;
+  state.totalPts -= p.cost;
+  state.history.push({ icon: p.icon, name: `Premio: ${p.name}`, pts: -p.cost, day: state.currentDay, ts: Date.now() });
+  showToast(`🎁 ¡${p.name} canjeado!`);
+  saveState(); render();
+}
+
+function confirmReset() {
+  openModal(
+    '🔄',
+    '¿Reiniciar la semana?',
+    'Se borran todas las tareas de esta semana. Los puntos acumulados se mantienen.',
+    'Sí, nueva semana', 'btn-confirm-red',
+    () => doResetWeek()
+  );
+}
+
+function doResetWeek() {
+  state.days = DAYS.map(() => ({ tasks: {}, penalties: {} }));
+  state.currentDay = todayIdx();
+  saveState(); render();
+  showToast('✅ ¡Nueva semana!');
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// Close modal on background click
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+render();
+</script>
+</body>
+</html>
