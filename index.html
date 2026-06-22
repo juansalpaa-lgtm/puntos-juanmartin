@@ -229,8 +229,11 @@
     <div id="grp-noche"></div>
   </div>
   <div class="card">
-    <div class="card-title">🎮 Pantallas — se ganan con puntos</div>
+    <div class="card-title">🎮 Nintendo — se gana con puntos</div>
     <div id="grp-pantallas"></div>
+    <div style="margin-top:8px; padding:10px 10px; background:#E3F2FD; border-radius:12px; font-size:0.82rem; font-weight:700; color:#1565C0;">
+      📺 TV 1 hora al día se gana cumpliendo la rutina del día ✅
+    </div>
   </div>
   <div class="card">
     <div class="card-title">⚠️ Puntos que se pierden</div>
@@ -302,11 +305,8 @@ const TASKS = {
     { id:'dormir',     icon:'😴', name:'Dormir juicioso',             pts:4 },
   ],
   pantallas: [
-    { id:'nintendo_sab', icon:'🎮', name:'Nintendo – sábado (30 min)',   pts:15, days:[5] },
-    { id:'nintendo_dom', icon:'🎮', name:'Nintendo – domingo (30 min)',   pts:15, days:[6] },
-    { id:'tv',           icon:'📺', name:'Ver TV 1 hora',                pts:10 },
-    { id:'pokemon1',     icon:'⚡', name:'Pokémon GO 30 min (bonus 1)',   pts:8 },
-    { id:'pokemon2',     icon:'⚡', name:'Pokémon GO 30 min (bonus 2)',   pts:8 },
+    { id:'nintendo_sab', icon:'🎮', name:'Nintendo – sábado (30 min)',   pts:50, days:[5] },
+    { id:'nintendo_dom', icon:'🎮', name:'Nintendo – domingo (30 min)',   pts:50, days:[6] },
   ],
 };
 
@@ -320,7 +320,8 @@ const PRIZES = [
   { icon:'🍦', name:'Helado',             cost:20,  hint:'' },
   { icon:'🚗', name:'Carrito Hot Wheels', cost:35,  hint:'' },
   { icon:'🎬', name:'Película en familia',cost:50,  hint:'' },
-  { icon:'⚡', name:'Muñeco Pokémon',     cost:90,  hint:'¡Hay que esforzarse mucho!' },
+  { icon:'⚡', name:'Pokémon GO 30 min',  cost:25,  hint:'2 veces por semana máximo' },
+  { icon:'🥊', name:'Muñeco Pokémon',     cost:90,  hint:'¡Hay que esforzarse mucho!' },
 ];
 
 // ── State ──────────────────────────────────────────────────────────────────
