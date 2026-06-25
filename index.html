@@ -506,7 +506,11 @@ function openModal(icon, title, body, confirmLabel, confirmClass, action) {
   btn.textContent = confirmLabel;
   btn.className = 'btn-confirm ' + confirmClass;
   pendingAction = action;
-  btn.onclick = () => { closeModal(); pendingAction && pendingAction(); };
+  btn.onclick = () => {
+    var fn = pendingAction;
+    closeModal();
+    fn && fn();
+  };
   document.getElementById('modal').classList.add('open');
 }
 
