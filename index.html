@@ -75,6 +75,8 @@
   .task-row.done .check-circle { background: var(--green); border-color: var(--green); color: white; }
   .task-row.done .task-name { text-decoration: line-through; color: #9E9E9E; }
   .task-row.done .task-pts { opacity: 0.45; }
+  .task-row.missing .task-name { color: #EF5350; }
+  .task-row.missing .check-circle { border-color: #EF5350; }
 
   .penalty-row { display: flex; align-items: center; gap: 8px; padding: 9px 6px; border-radius: 12px; margin-bottom: 5px; }
   .penalty-icon { font-size: 1.3rem; width: 34px; text-align: center; flex-shrink: 0; }
@@ -281,32 +283,35 @@ const DAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 
 const TASKS = {
   manana: [
-    { id:'levantarse', icon:'🛏️', name:'Levantarse juicioso', pts:3 },
-    { id:'dientes_m',  icon:'🪥', name:'Lavarse los dientes', pts:3 },
-    { id:'banarse',    icon:'🚿', name:'Bañarse',             pts:3 },
-    { id:'cambiarse',  icon:'👕', name:'Cambiarse',           pts:3 },
-    { id:'peinarse',   icon:'💈', name:'Peinarse',            pts:1 },
-    { id:'salir',      icon:'🎒', name:'Salir a la actividad juicioso', pts:3 },
-    { id:'bicicleta',  icon:'🚲', name:'3 vueltas en bicicleta', pts:3 },
+    { id:'levantarse', icon:'🛏️', name:'Levantarse juicioso', pts:3,  mandatory:true },
+    { id:'desayunar',  icon:'🍳', name:'Desayunar',            pts:3,  mandatory:true },
+    { id:'dientes_m',  icon:'🪥', name:'Lavarse los dientes',  pts:3,  mandatory:true },
+    { id:'banarse',    icon:'🚿', name:'Bañarse',              pts:3,  mandatory:true },
+    { id:'cambiarse',  icon:'👕', name:'Cambiarse',            pts:3,  mandatory:true },
+    { id:'peinarse',   icon:'💇', name:'Peinarse',             pts:1,  mandatory:true },
+    { id:'salir',      icon:'🎒', name:'Salir a la actividad juicioso', pts:3, mandatory:true },
+    { id:'bicicleta',  icon:'🚲', name:'3 vueltas en bicicleta', pts:3, mandatory:false },
   ],
   dia: [
-    { id:'almorzar',   icon:'🍽️', name:'Almorzar bien',  pts:3 },
-    { id:'pintar',     icon:'🎨', name:'Pintar',          pts:3 },
-    { id:'tarea',      icon:'📚', name:'Hacer la tarea',  pts:5 },
+    { id:'almorzar',   icon:'🍽️', name:'Almorzar bien',  pts:3, mandatory:true },
+    { id:'pintar',     icon:'🎨', name:'Pintar',          pts:3, mandatory:false },
+    { id:'tarea',      icon:'📚', name:'Hacer la tarea',  pts:5, mandatory:false },
   ],
   noche: [
-    { id:'dientes_n',  icon:'🦷', name:'Lavarse los dientes (noche)', pts:3 },
-    { id:'pijama',     icon:'🌙', name:'Ponerse el pijama',           pts:3 },
-    { id:'banio_noche',icon:'🚽', name:'Ir al baño antes de dormir',  pts:2 },
-    { id:'dormir',     icon:'😴', name:'Dormir juicioso',             pts:4 },
+    { id:'comer',      icon:'🍲', name:'Comer',                        pts:3, mandatory:true },
+    { id:'dientes_n',  icon:'🦷', name:'Lavarse los dientes (noche)',  pts:3, mandatory:true },
+    { id:'pijama',     icon:'🌙', name:'Ponerse el pijama',            pts:3, mandatory:true },
+    { id:'banio_noche',icon:'🚽', name:'Ir al baño antes de dormir',   pts:2, mandatory:true },
+    { id:'dormir',     icon:'😴', name:'Dormir juicioso',              pts:4, mandatory:true },
   ],
   pantallas: [],
 };
 
 const PENALTIES = [
-  { id:'grosero', icon:'😡', name:'Ser grosero',               pts:-4 },
-  { id:'nocaso',  icon:'🙉', name:'No hacer caso a la primera',pts:-3 },
-  { id:'reganio', icon:'😤', name:'Toca regañarlo',            pts:-2 },
+  { id:'grosero', icon:'😡', name:'Ser grosero',               pts:-20 },
+  { id:'pegar',   icon:'👊', name:'Pegar',                     pts:-50 },
+  { id:'nocaso',  icon:'🙉', name:'No hacer caso',             pts:-10 },
+  { id:'reganio', icon:'😤', name:'Toca regañarlo',            pts:-2  },
 ];
 
 const PRIZES = [
@@ -371,12 +376,22 @@ function renderGroup(group) {
   el.innerHTML = (TASKS[group] || []).map(t => {
     if (t.days && !t.days.includes(d)) return '';
     const done = !!state.days[d].tasks[t.id];
-    return `<div class="task-row ${done?'done':''}" onclick="toggleTask('${group}','${t.id}',${t.pts})">
-      <div class="task-icon">${t.icon}</div>
-      <div class="task-name">${t.name}</div>
-      <div class="task-pts pts-earn">+${t.pts}</div>
-      <div class="check-circle">${done?'✓':''}</div>
-    </div>`;
+    const isMandatory = t.mandatory === true;
+    // mandatory: starts checked, unchecking = lost pts (shown in red)
+    // optional: starts unchecked, checking = gained pts (shown in green)
+    const ptsLabel = isMandatory
+      ? (done ? '+'+t.pts : '-'+t.pts)
+      : (done ? '+'+t.pts : '+'+t.pts);
+    const ptsClass = isMandatory
+      ? (done ? 'pts-earn' : 'pts-lose')
+      : 'pts-earn';
+    const rowClass = done ? 'done' : (isMandatory ? 'missing' : '');
+    return '<div class="task-row '+rowClass+'" onclick="toggleTask(''+group+'',''+t.id+'','+t.pts+','+isMandatory+')">'
+      + '<div class="task-icon">'+t.icon+'</div>'
+      + '<div class="task-name">'+t.name+(isMandatory ? '' : ' <span style="font-size:0.7rem;color:#90A4AE;">(opcional)</span>')+'</div>'
+      + '<div class="task-pts '+ptsClass+'">'+ptsLabel+'</div>'
+      + '<div class="check-circle">'+(done?'✓':'')+'</div>'
+      + '</div>';
   }).join('');
 }
 
@@ -463,19 +478,52 @@ function renderResumen() {
 // ── Actions ────────────────────────────────────────────────────────────────
 function selectDay(i) {
   state.currentDay = i;
+  initMandatory(i);
   saveState(); render();
 }
 
-function toggleTask(group, id, pts) {
+function initMandatory(d) {
+  // Auto-check all mandatory tasks if day hasn't been initialized yet
+  const dayData = state.days[d];
+  if (dayData._initialized) return;
+  for (const group of Object.keys(TASKS)) {
+    for (const t of TASKS[group]) {
+      if (t.mandatory && dayData.tasks[t.id] === undefined) {
+        dayData.tasks[t.id] = true;
+        state.totalPts = Math.max(0, state.totalPts + t.pts);
+      }
+    }
+  }
+  dayData._initialized = true;
+}
+
+function toggleTask(group, id, pts, mandatory) {
   const d = state.currentDay;
   const wasDone = !!state.days[d].tasks[id];
   state.days[d].tasks[id] = !wasDone;
-  const delta = wasDone ? -pts : pts;
-  state.totalPts = Math.max(0, state.totalPts + delta);
-  if (!wasDone) {
-    const t = TASKS[group].find(t => t.id === id);
-    state.history.push({ icon: t.icon, name: t.name, pts, day: d, ts: Date.now() });
-    showToast(`+${pts} puntos ⭐`);
+  const t = TASKS[group].find(t => t.id === id);
+
+  if (mandatory) {
+    // mandatory: done=earned, undone=lost
+    if (wasDone) {
+      // unchecking: lose pts (didn't do it)
+      state.totalPts = Math.max(0, state.totalPts - pts);
+      state.history.push({ icon: t.icon, name: 'No hizo: '+t.name, pts: -pts, day: d, ts: Date.now() });
+      showToast('-'+pts+' puntos 😬');
+    } else {
+      // checking: recover pts (did it after all)
+      state.totalPts = Math.max(0, state.totalPts + pts);
+      state.history.push({ icon: t.icon, name: t.name, pts: pts, day: d, ts: Date.now() });
+      showToast('+'+pts+' puntos ⭐');
+    }
+  } else {
+    // optional: done=earned, undone=remove earned
+    const delta = wasDone ? -pts : pts;
+    state.totalPts = Math.max(0, state.totalPts + delta);
+    if (!wasDone) {
+      state.history.push({ icon: t.icon, name: t.name, pts, day: d, ts: Date.now() });
+      showToast('+'+pts+' puntos ⭐');
+    }
   }
   saveState(); render();
 }
@@ -578,6 +626,7 @@ document.getElementById('modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
+initMandatory(state.currentDay);
 render();
 </script>
 </body>
