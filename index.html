@@ -372,6 +372,34 @@ function renderDays() {
 
 function renderGroup(group) {
   const el = document.getElementById('grp-' + group);
+  if (!el) return;
+  const d = state.currentDay;
+  el.innerHTML = (TASKS[group] || []).map(function(t) {
+    if (t.days && !t.days.includes(d)) return '';
+    const done = !!state.days[d].tasks[t.id];
+    const isMandatory = t.mandatory === true;
+    const ptsClass = isMandatory ? (done ? 'pts-earn' : 'pts-lose') : 'pts-earn';
+    const ptsLabel = (done ? '+' : (isMandatory ? '-' : '+')) + t.pts;
+    const rowClass = done ? 'done' : (isMandatory ? 'missing' : '');
+    const optLabel = isMandatory ? '' : '<span style="font-size:0.7rem;color:#90A4AE;"> (opcional)</span>';
+    return '<div class="task-row ' + rowClass + '" onclick="toggleTask('' + group + '','' + t.id + '',' + t.pts + ',' + isMandatory + ')">'
+      + '<div class="task-icon">' + t.icon + '</div>'
+      + '<div class="task-name">' + t.name + optLabel + '</div>'
+      + '<div class="task-pts ' + ptsClass + '">' + ptsLabel + '</div>'
+      + '<div class="check-circle">' + (done ? '✓' : '') + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+
+function renderDays() {
+  document.getElementById('daySel').innerHTML = DAYS.map((d,i) =>
+    `<button class="day-btn ${state.currentDay===i?'active':''}" onclick="selectDay(${i})">${d}</button>`
+  ).join('');
+}
+
+function renderGroup(group) {
+  const el = document.getElementById('grp-' + group);
   const d = state.currentDay;
   el.innerHTML = (TASKS[group] || []).map(t => {
     if (t.days && !t.days.includes(d)) return '';
