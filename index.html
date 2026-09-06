@@ -10,107 +10,120 @@
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" type="image/png" href="icon.png">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --sky:#4FC3F7;--sun:#FFD600;--green:#66BB6A;--red:#EF5350;--bg:#E3F2FD;--card:#fff;--text:#1A237E;--soft:#90A4AE; }
-  body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:40px; }
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--sky:#4FC3F7;--sun:#FFD600;--green:#66BB6A;--red:#EF5350;--bg:#E3F2FD;--card:#fff;--text:#1A237E;--soft:#90A4AE}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:50px}
 
-  header { background:linear-gradient(135deg,#1565C0,#4FC3F7); padding:18px 16px 24px; text-align:center; border-radius:0 0 28px 28px; box-shadow:0 4px 16px rgba(21,101,192,.3); }
-  header h1 { font-size:1.6rem; font-weight:900; color:#fff; }
-  header .sub { font-size:.85rem; color:rgba(255,255,255,.8); margin-top:2px; }
-  .total-box { margin:10px auto 0; display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,.2); border-radius:20px; padding:8px 20px; }
-  .total-box .label { color:rgba(255,255,255,.85); font-size:.9rem; }
-  .total-box .pts { color:var(--sun); font-size:2.2rem; font-weight:900; line-height:1; }
+header{background:linear-gradient(135deg,#1565C0,#4FC3F7);padding:18px 16px 24px;text-align:center;border-radius:0 0 28px 28px;box-shadow:0 4px 16px rgba(21,101,192,.3)}
+header h1{font-size:1.6rem;font-weight:900;color:#fff}
+header .sub{font-size:.85rem;color:rgba(255,255,255,.8);margin-top:2px}
+.total-box{margin:10px auto 0;display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.2);border-radius:20px;padding:8px 20px}
+.total-box .label{color:rgba(255,255,255,.85);font-size:.9rem}
+.total-box .pts{color:var(--sun);font-size:2.2rem;font-weight:900;line-height:1}
 
-  .tabs { display:flex; gap:8px; padding:14px 14px 0; justify-content:center; }
-  .tab { flex:1; max-width:160px; padding:10px 0; border-radius:14px; border:none; font-family:'Nunito',sans-serif; font-size:.88rem; font-weight:800; cursor:pointer; transition:all .2s; background:#fff; color:var(--soft); box-shadow:0 2px 8px rgba(0,0,0,.08); }
-  .tab.active { background:var(--text); color:#fff; transform:translateY(-2px); box-shadow:0 4px 14px rgba(26,35,126,.25); }
+.tabs{display:flex;gap:8px;padding:14px 14px 0;justify-content:center}
+.tab{flex:1;max-width:160px;padding:10px 0;border-radius:14px;border:none;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;transition:all .2s;background:#fff;color:var(--soft);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.tab.active{background:var(--text);color:#fff;transform:translateY(-2px);box-shadow:0 4px 14px rgba(26,35,126,.25)}
 
-  .section { display:none; padding:12px 14px 0; }
-  .section.active { display:block; }
+.section{display:none;padding:12px 14px 0}
+.section.active{display:block}
 
-  .day-selector { display:flex; gap:6px; overflow-x:auto; padding:10px 0 12px; scrollbar-width:none; }
-  .day-btn { flex-shrink:0; padding:8px 14px; border-radius:20px; border:2px solid #BBDEFB; background:#fff; font-family:'Nunito',sans-serif; font-weight:800; font-size:.82rem; cursor:pointer; color:var(--text); transition:all .15s; }
-  .day-btn.active { background:var(--sky); border-color:var(--sky); color:#fff; }
+.day-selector{display:flex;gap:6px;overflow-x:auto;padding:10px 0 12px;scrollbar-width:none}
+.day-btn{flex-shrink:0;padding:8px 14px;border-radius:20px;border:2px solid #BBDEFB;background:#fff;font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;cursor:pointer;color:var(--text);transition:all .15s}
+.day-btn.active{background:var(--sky);border-color:var(--sky);color:#fff}
 
-  .card { background:var(--card); border-radius:18px; padding:14px; margin-bottom:10px; box-shadow:0 2px 10px rgba(0,0,0,.06); }
-  .card-title { font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; }
+/* ACCORDION */
+.accordion{background:#fff;border-radius:18px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.06);overflow:hidden}
+.accordion-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;user-select:none}
+.accordion-header:active{background:#F5F7FA}
+.accordion-title{font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft)}
+.accordion-badge{font-size:.75rem;font-weight:900;background:#E8F5E9;color:#2E7D32;padding:3px 9px;border-radius:20px}
+.accordion-badge.has-items{background:#E8F5E9;color:#2E7D32}
+.accordion-arrow{font-size:.8rem;color:var(--soft);transition:transform .25s}
+.accordion.open .accordion-arrow{transform:rotate(180deg)}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.accordion.open .accordion-body{max-height:1000px}
+.accordion-inner{padding:0 14px 14px}
 
-  .task-row { display:flex; align-items:center; gap:10px; padding:10px; border-radius:12px; margin-bottom:5px; cursor:pointer; user-select:none; transition:background .15s; }
-  .task-row:active { background:#F0F4F8; }
-  .task-icon { font-size:1.4rem; flex-shrink:0; width:34px; text-align:center; }
-  .task-name { flex:1; font-size:.93rem; font-weight:700; }
-  .task-pts { font-size:.82rem; font-weight:900; padding:4px 9px; border-radius:20px; min-width:44px; text-align:center; }
-  .pts-earn { background:#E8F5E9; color:#2E7D32; }
-  .pts-lose { background:#FFEBEE; color:#C62828; }
-  .check-circle { width:28px; height:28px; border-radius:50%; border:2.5px solid #BDBDBD; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; font-size:1rem; }
-  .task-row.done .check-circle { background:var(--green); border-color:var(--green); color:#fff; }
-  .task-row.done .task-name { text-decoration:line-through; color:#9E9E9E; }
-  .task-row.missing .task-name { color:var(--red); }
-  .task-row.missing .check-circle { border-color:var(--red); }
-  .opt-label { font-size:.7rem; color:var(--soft); font-weight:700; }
+.task-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;margin-bottom:5px;cursor:pointer;user-select:none;transition:background .15s}
+.task-row:active{background:#F0F4F8}
+.task-icon{font-size:1.4rem;flex-shrink:0;width:34px;text-align:center}
+.task-name{flex:1;font-size:.93rem;font-weight:700}
+.task-pts{font-size:.82rem;font-weight:900;padding:4px 9px;border-radius:20px;min-width:44px;text-align:center}
+.pts-earn{background:#E8F5E9;color:#2E7D32}
+.pts-lose{background:#FFEBEE;color:#C62828}
+.check-circle{width:28px;height:28px;border-radius:50%;border:2.5px solid #BDBDBD;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:1rem}
+.task-row.done .check-circle{background:var(--green);border-color:var(--green);color:#fff}
+.task-row.done .task-name{text-decoration:line-through;color:#9E9E9E}
+.task-row.done .task-pts{opacity:.45}
+.opt-label{font-size:.7rem;color:var(--soft);font-weight:700}
 
-  .penalty-row { display:flex; align-items:center; gap:8px; padding:9px 6px; border-radius:12px; margin-bottom:5px; }
-  .penalty-icon { font-size:1.3rem; width:34px; text-align:center; flex-shrink:0; }
-  .penalty-name { flex:1; font-size:.88rem; font-weight:700; }
-  .penalty-btn { width:34px; height:34px; border-radius:50%; border:none; font-size:1.1rem; font-weight:900; cursor:pointer; transition:transform .1s; display:flex; align-items:center; justify-content:center; }
-  .penalty-btn:active { transform:scale(.88); }
-  .pen-add { background:#FFCDD2; color:#C62828; }
-  .pen-sub { background:#F5F5F5; color:#757575; }
-  .pen-count { font-size:1.1rem; font-weight:900; min-width:22px; text-align:center; color:#C62828; }
+.penalty-row{display:flex;align-items:center;gap:8px;padding:9px 6px;border-radius:12px;margin-bottom:5px}
+.penalty-icon{font-size:1.3rem;width:34px;text-align:center;flex-shrink:0}
+.penalty-name{flex:1;font-size:.88rem;font-weight:700}
+.penalty-btn{width:34px;height:34px;border-radius:50%;border:none;font-size:1.1rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.penalty-btn:active{transform:scale(.88)}
+.pen-add{background:#FFCDD2;color:#C62828}
+.pen-sub{background:#F5F5F5;color:#757575}
+.pen-count{font-size:1.1rem;font-weight:900;min-width:22px;text-align:center;color:#C62828}
 
-  .prize-card { background:var(--card); border-radius:18px; padding:14px; margin-bottom:10px; box-shadow:0 2px 10px rgba(0,0,0,.06); display:flex; align-items:center; gap:12px; }
-  .prize-card.legendary { background:linear-gradient(135deg,#FFF8E1,#FFFDE7); border:2px solid var(--sun); box-shadow:0 4px 16px rgba(255,214,0,.25); }
-  .prize-icon { font-size:2rem; }
-  .prize-info { flex:1; }
-  .prize-name { font-weight:800; font-size:.97rem; }
-  .prize-hint { font-size:.75rem; color:var(--soft); font-weight:700; margin-top:1px; font-style:italic; }
-  .prize-cost { font-size:.82rem; color:var(--soft); font-weight:700; margin-top:3px; }
-  .prize-progress { height:5px; background:#EEE; border-radius:10px; margin-top:6px; overflow:hidden; }
-  .prize-progress-fill { height:100%; border-radius:10px; background:var(--sun); transition:width .4s; }
-  .prize-btn { padding:9px 14px; border-radius:14px; border:none; font-family:'Nunito',sans-serif; font-weight:800; font-size:.82rem; cursor:pointer; transition:all .15s; white-space:nowrap; }
-  .prize-btn.can-afford { background:var(--sun); color:#5D4037; box-shadow:0 3px 10px rgba(255,214,0,.4); }
-  .prize-btn.can-afford:active { transform:scale(.95); }
-  .prize-btn.cant-afford { background:#F5F5F5; color:#BDBDBD; cursor:not-allowed; }
-  .prize-btn.save-btn { background:#E3F2FD; color:#1565C0; box-shadow:0 3px 10px rgba(21,101,192,.2); }
-  .prize-btn.save-btn:active { transform:scale(.95); }
+/* PRIZES */
+.prize-card{background:#fff;border-radius:18px;padding:14px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px}
+.prize-card.legendary{background:linear-gradient(135deg,#FFF8E1,#FFFDE7);border:2px solid var(--sun);box-shadow:0 4px 16px rgba(255,214,0,.25)}
+.prize-icon{font-size:2rem}
+.prize-info{flex:1}
+.prize-name{font-weight:800;font-size:.97rem}
+.prize-hint{font-size:.75rem;color:var(--soft);font-weight:700;font-style:italic;margin-top:1px}
+.prize-cost{font-size:.82rem;color:var(--soft);font-weight:700;margin-top:3px}
+.prize-progress{height:6px;background:#EEE;border-radius:10px;margin-top:6px;overflow:hidden}
+.prize-fill{height:100%;border-radius:10px;background:var(--sun);transition:width .4s}
+.prize-btn{padding:9px 14px;border-radius:14px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;cursor:pointer;white-space:nowrap}
+.prize-btn.can{background:var(--sun);color:#5D4037;box-shadow:0 3px 10px rgba(255,214,0,.4)}
+.prize-btn.can:active{transform:scale(.95)}
+.prize-btn.save{background:#E3F2FD;color:#1565C0}
+.prize-btn.save:active{transform:scale(.95)}
+.prize-btn.locked{background:#F5F5F5;color:#BDBDBD;cursor:not-allowed}
 
-  .week-summary { background:linear-gradient(135deg,#1565C0,#4FC3F7); border-radius:18px; padding:16px; margin-bottom:12px; color:#fff; text-align:center; }
-  .week-summary .big { font-size:2.5rem; font-weight:900; color:var(--sun); line-height:1; }
-  .daily-strip { display:flex; gap:5px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
-  .day-dot { display:flex; flex-direction:column; align-items:center; gap:3px; }
-  .day-dot .d-label { font-size:.62rem; opacity:.8; }
-  .day-dot .d-circle { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:.78rem; }
-  .day-dot .d-circle.has { background:rgba(255,255,255,.35); }
+/* RESUMEN */
+.week-card{background:linear-gradient(135deg,#1565C0,#4FC3F7);border-radius:18px;padding:16px;margin-bottom:12px;color:#fff;text-align:center}
+.week-card .big{font-size:2.5rem;font-weight:900;color:var(--sun);line-height:1}
+.daily-strip{display:flex;gap:5px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.day-dot{display:flex;flex-direction:column;align-items:center;gap:3px}
+.day-dot .dl{font-size:.62rem;opacity:.8}
+.day-dot .dc{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem}
+.day-dot .dc.has{background:rgba(255,255,255,.35)}
 
-  .history-item { display:flex; align-items:center; gap:10px; padding:9px 10px; background:#fff; border-radius:12px; margin-bottom:6px; box-shadow:0 1px 4px rgba(0,0,0,.05); }
-  .hist-icon { font-size:1.2rem; }
-  .hist-info { flex:1; }
-  .hist-name { font-size:.88rem; font-weight:700; }
-  .hist-day { font-size:.72rem; color:var(--soft); }
-  .hist-pts { font-weight:900; font-size:.97rem; }
-  .earn { color:var(--green); } .lose { color:var(--red); }
-  .empty { text-align:center; color:var(--soft); padding:28px 0; font-size:.92rem; }
+.hist-item{display:flex;align-items:center;gap:10px;padding:9px 10px;background:#fff;border-radius:12px;margin-bottom:6px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.hist-icon{font-size:1.2rem}
+.hist-info{flex:1}
+.hist-name{font-size:.88rem;font-weight:700}
+.hist-day{font-size:.72rem;color:var(--soft)}
+.hist-pts{font-weight:900;font-size:.97rem}
+.earn{color:var(--green)}.lose{color:var(--red)}
+.empty{text-align:center;color:var(--soft);padding:28px 0;font-size:.92rem}
 
-  .danger-zone { margin-top:16px; padding:14px; background:#fff; border-radius:18px; box-shadow:0 2px 10px rgba(0,0,0,.06); }
-  .danger-title { font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; }
-  .reset-btn { width:100%; padding:13px; border-radius:14px; border:none; background:#FFEBEE; color:#C62828; font-family:'Nunito',sans-serif; font-weight:800; font-size:.92rem; cursor:pointer; }
-  .reset-btn:active { background:#FFCDD2; }
+.danger-zone{margin-top:16px;padding:14px;background:#fff;border-radius:18px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.danger-title{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:10px}
+.reset-btn{width:100%;padding:13px;border-radius:14px;border:none;background:#FFEBEE;color:#C62828;font-family:'Nunito',sans-serif;font-weight:800;font-size:.92rem;cursor:pointer}
+.reset-btn:active{background:#FFCDD2}
 
-  .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:900; align-items:center; justify-content:center; padding:20px; }
-  .modal-bg.open { display:flex; }
-  .modal { background:#fff; border-radius:24px; padding:24px; max-width:320px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.3); }
-  .modal .m-icon { font-size:3rem; margin-bottom:10px; }
-  .modal h2 { font-size:1.2rem; font-weight:900; color:var(--text); margin-bottom:6px; }
-  .modal p { font-size:.88rem; color:var(--soft); font-weight:700; line-height:1.4; }
-  .modal-btns { display:flex; gap:10px; margin-top:20px; }
-  .modal-btns button { flex:1; padding:12px; border-radius:14px; border:none; font-family:'Nunito',sans-serif; font-weight:800; font-size:.92rem; cursor:pointer; }
-  .btn-cancel { background:#F5F5F5; color:#757575; }
-  .btn-confirm { background:var(--sun); color:#5D4037; }
-  .btn-confirm-red { background:#FFEBEE; color:#C62828; }
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:24px;padding:24px;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal .m-icon{font-size:3rem;margin-bottom:10px}
+.modal h2{font-size:1.2rem;font-weight:900;color:var(--text);margin-bottom:6px}
+.modal p{font-size:.88rem;color:var(--soft);font-weight:700;line-height:1.4}
+.modal input{width:100%;margin-top:12px;padding:10px;border-radius:12px;border:2px solid #BBDEFB;font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:900;text-align:center;color:var(--text);display:none}
+.modal-btns{display:flex;gap:10px;margin-top:20px}
+.modal-btns button{flex:1;padding:12px;border-radius:14px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:.92rem;cursor:pointer}
+.btn-cancel{background:#F5F5F5;color:#757575}
+.btn-ok{background:var(--sun);color:#5D4037}
+.btn-red{background:#FFEBEE;color:#C62828}
 
-  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(90px); background:var(--text); color:#fff; padding:12px 22px; border-radius:24px; font-weight:800; font-size:.92rem; box-shadow:0 6px 20px rgba(26,35,126,.3); transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:999; white-space:nowrap; }
-  .toast.show { transform:translateX(-50%) translateY(0); }
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--text);color:#fff;padding:12px 22px;border-radius:24px;font-weight:800;font-size:.92rem;box-shadow:0 6px 20px rgba(26,35,126,.3);transition:transform .35s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -131,43 +144,94 @@
   <button class="tab" onclick="showTab('resumen',this)">📊 Semana</button>
 </div>
 
+<!-- TAREAS -->
 <div class="section active" id="sec-tareas">
   <div class="day-selector" id="daySel"></div>
-  <div class="card"><div class="card-title">☀️ Rutina de mañana</div><div id="grp-manana"></div></div>
-  <div class="card"><div class="card-title">🌤️ Durante el día</div><div id="grp-dia"></div></div>
-  <div class="card"><div class="card-title">🌙 Rutina de noche</div><div id="grp-noche"></div></div>
-  <div class="card"><div class="card-title">⚠️ Puntos que se pierden</div><div id="grp-multas"></div></div>
+
+  <div class="accordion open" id="acc-manana">
+    <div class="accordion-header" onclick="toggleAcc('manana')">
+      <span class="accordion-title">☀️ Rutina de mañana</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="accordion-badge" id="badge-manana">0 pts</span>
+        <span class="accordion-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body"><div class="accordion-inner" id="grp-manana"></div></div>
+  </div>
+
+  <div class="accordion" id="acc-dia">
+    <div class="accordion-header" onclick="toggleAcc('dia')">
+      <span class="accordion-title">🌤️ Durante el día</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="accordion-badge" id="badge-dia">0 pts</span>
+        <span class="accordion-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body"><div class="accordion-inner" id="grp-dia"></div></div>
+  </div>
+
+  <div class="accordion" id="acc-noche">
+    <div class="accordion-header" onclick="toggleAcc('noche')">
+      <span class="accordion-title">🌙 Rutina de noche</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="accordion-badge" id="badge-noche">0 pts</span>
+        <span class="accordion-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body"><div class="accordion-inner" id="grp-noche"></div></div>
+  </div>
+
+  <div class="accordion" id="acc-multas">
+    <div class="accordion-header" onclick="toggleAcc('multas')">
+      <span class="accordion-title">⚠️ Puntos que se pierden</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="accordion-badge" id="badge-multas" style="background:#FFEBEE;color:#C62828">0</span>
+        <span class="accordion-arrow">▼</span>
+      </div>
+    </div>
+    <div class="accordion-body"><div class="accordion-inner" id="grp-multas"></div></div>
+  </div>
 </div>
 
+<!-- PREMIOS -->
 <div class="section" id="sec-premios">
-  <div style="padding:4px 0 10px;font-size:.85rem;color:var(--soft);font-weight:700;text-align:center;">
-    Juan Martín tiene <span id="pts2" style="color:var(--text);font-size:1.1rem;font-weight:900;">0</span> ⭐
+  <div style="padding:4px 0 10px;font-size:.85rem;color:var(--soft);font-weight:700;text-align:center">
+    Juan Martín tiene <span id="pts2" style="color:var(--text);font-size:1.1rem;font-weight:900">0</span> ⭐ disponibles
   </div>
   <div id="prizesContainer"></div>
 </div>
 
+<!-- RESUMEN -->
 <div class="section" id="sec-resumen">
-  <div class="week-summary">
-    <div style="font-size:.82rem;opacity:.88;margin-bottom:4px;">Esta semana ganó</div>
+  <div class="week-card">
+    <div style="font-size:.82rem;opacity:.88;margin-bottom:4px">Esta semana ganó</div>
     <div class="big" id="weekTotal">0</div>
-    <div style="font-size:.82rem;opacity:.88;margin-top:4px;">puntos ⭐</div>
+    <div style="font-size:.82rem;opacity:.88;margin-top:4px">puntos ⭐</div>
     <div class="daily-strip" id="dailyStrip"></div>
   </div>
-  <div class="card"><div class="card-title">📋 Historial</div><div id="histContainer"></div></div>
+  <div class="accordion open" id="acc-hist">
+    <div class="accordion-header" onclick="toggleAcc('hist')">
+      <span class="accordion-title">📋 Historial</span>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body"><div class="accordion-inner" id="histContainer"></div></div>
+  </div>
   <div class="danger-zone">
     <div class="danger-title">⚙️ Opciones</div>
     <button class="reset-btn" onclick="confirmReset()">🔄 Reiniciar semana</button>
   </div>
 </div>
 
+<!-- MODAL -->
 <div class="modal-bg" id="modal">
   <div class="modal">
     <div class="m-icon" id="modal-icon">🎁</div>
     <h2 id="modal-title"></h2>
     <p id="modal-body"></p>
+    <input type="number" id="modal-input" min="1">
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button id="modal-confirm" class="btn-confirm">Confirmar</button>
+      <button id="modal-confirm" class="btn-ok">OK</button>
     </div>
   </div>
 </div>
@@ -175,52 +239,50 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const DAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+var DAYS = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 
-// mandatory:true = starts checked, uncheck = lose pts
-// mandatory:false = starts unchecked, check = gain pts
-const TASKS = {
+var TASKS = {
   manana: [
-    { id:'levantarse', icon:'🛏️', name:'Levantarse juicioso',        pts:3, mandatory:true  },
-    { id:'desayunar',  icon:'🍳', name:'Desayunar',                   pts:3, mandatory:true  },
-    { id:'dientes_m',  icon:'🪥', name:'Lavarse los dientes',         pts:3, mandatory:true  },
-    { id:'banarse',    icon:'🚿', name:'Bañarse',                     pts:3, mandatory:true  },
-    { id:'cambiarse',  icon:'👕', name:'Cambiarse',                   pts:3, mandatory:true  },
-    { id:'peinarse',   icon:'💇', name:'Peinarse',                    pts:1, mandatory:true  },
-    { id:'salir',      icon:'🎒', name:'Salir a la actividad juicioso',pts:3, mandatory:true  },
-    { id:'bicicleta',  icon:'🚲', name:'3 vueltas en bicicleta',      pts:3, mandatory:false },
+    {id:'levantarse', icon:'🛏️', name:'Levantarse juicioso',         pts:3,  optional:false},
+    {id:'desayunar',  icon:'🍳',  name:'Desayunar',                   pts:3,  optional:false},
+    {id:'dientes_m',  icon:'🪥',  name:'Lavarse los dientes',         pts:3,  optional:false},
+    {id:'banarse',    icon:'🚿',  name:'Bañarse',                     pts:3,  optional:false},
+    {id:'cambiarse',  icon:'👕',  name:'Cambiarse',                   pts:3,  optional:false},
+    {id:'peinarse',   icon:'💇',  name:'Peinarse',                    pts:1,  optional:false},
+    {id:'salir',      icon:'🎒',  name:'Salir a la actividad juicioso',pts:3, optional:false},
+    {id:'bicicleta',  icon:'🚲',  name:'3 vueltas en bicicleta',      pts:3,  optional:true}
   ],
   dia: [
-    { id:'almorzar',   icon:'🍽️', name:'Almorzar bien',   pts:3, mandatory:true  },
-    { id:'pintar',     icon:'🎨', name:'Pintar',           pts:3, mandatory:false },
-    { id:'tarea',      icon:'📚', name:'Hacer la tarea',   pts:5, mandatory:false },
+    {id:'almorzar',   icon:'🍽️', name:'Almorzar bien',   pts:3, optional:false},
+    {id:'pintar',     icon:'🎨', name:'Pintar',           pts:3, optional:true},
+    {id:'tarea',      icon:'📚', name:'Hacer la tarea',   pts:5, optional:true}
   ],
   noche: [
-    { id:'comer',       icon:'🍲', name:'Comer',                       pts:3, mandatory:true },
-    { id:'dientes_n',   icon:'🦷', name:'Lavarse los dientes (noche)', pts:3, mandatory:true },
-    { id:'pijama',      icon:'🌙', name:'Ponerse el pijama',           pts:3, mandatory:true },
-    { id:'banio_noche', icon:'🚽', name:'Ir al baño antes de dormir',  pts:2, mandatory:true },
-    { id:'dormir',      icon:'😴', name:'Dormir juicioso',             pts:4, mandatory:true },
-  ],
+    {id:'comer',       icon:'🍲', name:'Comer',                       pts:3, optional:false},
+    {id:'dientes_n',   icon:'🦷', name:'Lavarse los dientes (noche)', pts:3, optional:false},
+    {id:'pijama',      icon:'🌙', name:'Ponerse el pijama',           pts:3, optional:false},
+    {id:'banio_noche', icon:'🚽', name:'Ir al baño antes de dormir',  pts:2, optional:false},
+    {id:'dormir',      icon:'😴', name:'Dormir juicioso',             pts:4, optional:false}
+  ]
 };
 
-const PENALTIES = [
-  { id:'grosero', icon:'😡', name:'Ser grosero',    pts:-20 },
-  { id:'pegar',   icon:'👊', name:'Pegar',          pts:-50 },
-  { id:'nocaso',  icon:'🙉', name:'No hacer caso',  pts:-10 },
-  { id:'reganio', icon:'😤', name:'Toca regañarlo', pts:-2  },
+var PENALTIES = [
+  {id:'grosero', icon:'😡', name:'Ser grosero',    pts:-20},
+  {id:'pegar',   icon:'👊', name:'Pegar',          pts:-50},
+  {id:'nocaso',  icon:'🙉', name:'No hacer caso',  pts:-10},
+  {id:'reganio', icon:'😤', name:'Toca regañarlo', pts:-2}
 ];
 
-const PRIZES = [
-  { icon:'🎬', name:'Película',               cost:70   },
-  { icon:'🍦', name:'Plan con familia (helado)', cost:80 },
-  { icon:'👨‍🍳', name:'Capítulo MasterChef',    cost:100  },
-  { icon:'🏙️', name:'Bogotá',                  cost:150  },
-  { icon:'🎮', name:'Nintendo',                cost:180  },
-  { icon:'⚡', name:'Pokémon GO',              cost:180  },
-  { icon:'👫', name:'Plan con amigo',          cost:200  },
-  { icon:'🧸', name:'Mewtwo',                  cost:300  },
-  { icon:'✈️', name:'Estados Unidos',          cost:1000 },
+var PRIZES = [
+  {icon:'🎬', name:'Película',                 cost:70,   hint:''},
+  {icon:'🍦', name:'Plan con familia (helado)',cost:80,   hint:''},
+  {icon:'👨‍🍳', name:'Capítulo MasterChef',     cost:100,  hint:''},
+  {icon:'🏙️', name:'Bogotá',                   cost:150,  hint:''},
+  {icon:'🎮', name:'Nintendo',                 cost:180,  hint:'Solo sábado o domingo'},
+  {icon:'⚡', name:'Pokémon GO',               cost:180,  hint:'¡Hay que portarse muy bien!'},
+  {icon:'👫', name:'Plan con amigo',           cost:200,  hint:''},
+  {icon:'🧸', name:'Mewtwo',                   cost:300,  hint:'¡Hay que esforzarse mucho!'},
+  {icon:'✈️', name:'Estados Unidos',           cost:1000, hint:'El premio de los sueños 🌟'}
 ];
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -228,18 +290,24 @@ var state = loadState();
 
 function loadState() {
   try {
-    var raw = localStorage.getItem('jm_v3');
+    var raw = localStorage.getItem('jm_v4');
     if (raw) return JSON.parse(raw);
   } catch(e) {}
   return freshState();
 }
 
 function freshState() {
-  return { totalPts:0, savings:{}, days:DAYS.map(function(){ return { tasks:{}, penalties:{}, interacted:{}, init:false }; }), history:[], currentDay:todayIdx() };
+  return {
+    totalPts: 0,
+    savings: {},
+    days: DAYS.map(function(){ return {tasks:{}, penalties:{}}; }),
+    history: [],
+    currentDay: todayIdx()
+  };
 }
 
 function saveState() {
-  try { localStorage.setItem('jm_v3', JSON.stringify(state)); } catch(e) {}
+  try { localStorage.setItem('jm_v4', JSON.stringify(state)); } catch(e) {}
 }
 
 function todayIdx() {
@@ -247,11 +315,10 @@ function todayIdx() {
   return d === 0 ? 6 : d - 1;
 }
 
-// Auto-check mandatory tasks when visiting a day for the first time
-function initDay(d) {
-  var day = state.days[d];
-  if (day.init) return;
-  day.init = true;
+// ── Accordion ─────────────────────────────────────────────────────────────
+function toggleAcc(name) {
+  var el = document.getElementById('acc-'+name);
+  if (el) el.classList.toggle('open');
 }
 
 // ── Render ─────────────────────────────────────────────────────────────────
@@ -268,80 +335,67 @@ function render() {
 }
 
 function renderDays() {
-  document.getElementById('daySel').innerHTML = DAYS.map(function(d,i) {
-    return '<button class="day-btn' + (state.currentDay===i?' active':'') + '" onclick="selectDay('+i+')">'+d+'</button>';
-  }).join('');
+  var html = '';
+  for (var i = 0; i < DAYS.length; i++) {
+    html += '<button class="day-btn' + (state.currentDay===i?' active':'') + '" onclick="selectDay('+i+')">'+DAYS[i]+'</button>';
+  }
+  document.getElementById('daySel').innerHTML = html;
+}
+
+function groupPts(group) {
+  var d = state.currentDay;
+  var tasks = TASKS[group] || [];
+  var pts = 0;
+  for (var i = 0; i < tasks.length; i++) {
+    if (state.days[d].tasks[tasks[i].id]) pts += tasks[i].pts;
+  }
+  return pts;
 }
 
 function renderGroup(group) {
   var el = document.getElementById('grp-'+group);
+  var badge = document.getElementById('badge-'+group);
   if (!el) return;
   var d = state.currentDay;
   var tasks = TASKS[group] || [];
   var html = '';
+  var totalPts = 0;
   for (var i = 0; i < tasks.length; i++) {
     var t = tasks[i];
-    if (t.days && t.days.indexOf(d) === -1) continue;
     var done = !!state.days[d].tasks[t.id];
-    var optHtml = t.mandatory ? '' : ' <span class="opt-label">(opcional)</span>';
-    html += '<div class="task-row '+(done?'done':'')+'" onclick="toggleTask(''+group+'',''+t.id+'','+t.pts+','+t.mandatory+')">'
-      + '<div class="task-icon">'+t.icon+'</div>'
-      + '<div class="task-name">'+t.name+optHtml+'</div>'
-      + '<div class="task-pts pts-earn">+'+t.pts+'</div>'
-      + '<div class="check-circle">'+(done?'✓':'')+'</div>'
-      + '</div>';
+    if (done) totalPts += t.pts;
+    var optHtml = t.optional ? ' <span class="opt-label">(opcional)</span>' : '';
+    html += '<div class="task-row '+(done?'done':'')+'" onclick="toggleTask(\''+group+'\',\''+t.id+'\','+t.pts+')">'
+      +'<div class="task-icon">'+t.icon+'</div>'
+      +'<div class="task-name">'+t.name+optHtml+'</div>'
+      +'<div class="task-pts pts-earn">+'+t.pts+'</div>'
+      +'<div class="check-circle">'+(done?'✓':'')+'</div>'
+      +'</div>';
   }
   el.innerHTML = html;
-}
-
-
-function renderDays() {
-  document.getElementById('daySel').innerHTML = DAYS.map(function(d,i) {
-    return '<button class="day-btn' + (state.currentDay===i?' active':'') + '" onclick="selectDay('+i+')">'+d+'</button>';
-  }).join('');
-}
-
-function renderGroup(group) {
-  var el = document.getElementById('grp-'+group);
-  if (!el) return;
-  var d = state.currentDay;
-  var tasks = TASKS[group] || [];
-  var html = '';
-  for (var i = 0; i < tasks.length; i++) {
-    var t = tasks[i];
-    if (t.days && t.days.indexOf(d) === -1) continue;
-    var done = !!state.days[d].tasks[t.id];
-    var isMand = t.mandatory === true;
-    var rowCls = done ? 'done' : (isMand ? 'missing' : '');
-    var ptsCls = isMand ? (done ? 'pts-earn' : 'pts-lose') : 'pts-earn';
-    var ptsLbl = (isMand && !done ? '-' : '+') + t.pts;
-    var optHtml = isMand ? '' : ' <span class="opt-label">(opcional)</span>';
-    html += '<div class="task-row '+rowCls+'" onclick="toggleTask(\''+group+'\',\''+t.id+'\','+t.pts+','+isMand+')">'
-      + '<div class="task-icon">'+t.icon+'</div>'
-      + '<div class="task-name">'+t.name+optHtml+'</div>'
-      + '<div class="task-pts '+ptsCls+'">'+ptsLbl+'</div>'
-      + '<div class="check-circle">'+(done?'✓':'')+'</div>'
-      + '</div>';
-  }
-  el.innerHTML = html;
+  if (badge) badge.textContent = totalPts + ' pts';
 }
 
 function renderPenalties() {
   var d = state.currentDay;
   var html = '';
+  var total = 0;
   for (var i = 0; i < PENALTIES.length; i++) {
     var p = PENALTIES[i];
     var cnt = state.days[d].penalties[p.id] || 0;
+    total += cnt;
     html += '<div class="penalty-row">'
-      + '<div class="penalty-icon">'+p.icon+'</div>'
-      + '<div class="penalty-name">'+p.name+'</div>'
-      + '<div class="task-pts pts-lose">'+p.pts+'</div>'
-      + '<button class="penalty-btn pen-sub" onclick="changePenalty(\''+p.id+'\','+p.pts+',-1)">−</button>'
-      + '<div class="pen-count">'+cnt+'</div>'
-      + '<button class="penalty-btn pen-add" onclick="changePenalty(\''+p.id+'\','+p.pts+',1)">+</button>'
-      + '</div>';
+      +'<div class="penalty-icon">'+p.icon+'</div>'
+      +'<div class="penalty-name">'+p.name+'</div>'
+      +'<div class="task-pts pts-lose">'+p.pts+'</div>'
+      +'<button class="penalty-btn pen-sub" onclick="changePenalty(\''+p.id+'\','+p.pts+',-1)">−</button>'
+      +'<div class="pen-count">'+cnt+'</div>'
+      +'<button class="penalty-btn pen-add" onclick="changePenalty(\''+p.id+'\','+p.pts+',1)">+</button>'
+      +'</div>';
   }
   document.getElementById('grp-multas').innerHTML = html;
+  var badge = document.getElementById('badge-multas');
+  if (badge) badge.textContent = total > 0 ? total+' multas' : '0';
 }
 
 function renderPrizes() {
@@ -355,82 +409,90 @@ function renderPrizes() {
     var isLeg = p.cost >= 300;
     var canAdd = state.totalPts > 0 && saved < p.cost;
     var canRedeem = saved >= p.cost;
-    var savedTxt = saved > 0 ? saved+'/'+p.cost+' pts ahorrados' : '0/'+p.cost+' pts';
-    var faltanTxt = saved > 0 ? ' · faltan '+remaining : '';
-
-    var btnHtml = '';
+    var hintHtml = p.hint ? '<div class="prize-hint">'+p.hint+'</div>' : '';
+    var savedTxt = saved > 0 ? saved+' / '+p.cost+' pts' : '0 / '+p.cost+' pts';
+    var faltanTxt = saved < p.cost ? ' · faltan '+remaining : ' · ¡Completo!';
+    var btnHtml;
     if (canRedeem) {
-      btnHtml = '<button class="prize-btn can-afford" onclick="confirmPrize('+i+')">🎁 ¡Canjear!</button>';
+      btnHtml = '<button class="prize-btn can" onclick="confirmPrize('+i+')">🎁 ¡Canjear!</button>';
     } else if (canAdd) {
-      btnHtml = '<button class="prize-btn save-btn" onclick="openSave('+i+')">🪙 Abonar</button>';
+      btnHtml = '<button class="prize-btn save" onclick="openSave('+i+')">🪙 Abonar</button>';
     } else {
-      btnHtml = '<button class="prize-btn cant-afford" disabled>🔒</button>';
+      btnHtml = '<button class="prize-btn locked" disabled>🔒</button>';
     }
-
     html += '<div class="prize-card '+(isLeg?'legendary':'')+'">'
-      + '<div class="prize-icon">'+p.icon+'</div>'
-      + '<div class="prize-info">'
-      + '<div class="prize-name">'+p.name+'</div>'
-      + '<div class="prize-cost">⭐ '+savedTxt+faltanTxt+'</div>'
-      + '<div class="prize-progress"><div class="prize-progress-fill" style="width:'+pct+'%"></div></div>'
-      + '</div>'+btnHtml+'</div>';
+      +'<div class="prize-icon">'+p.icon+'</div>'
+      +'<div class="prize-info">'
+      +'<div class="prize-name">'+p.name+'</div>'
+      +hintHtml
+      +'<div class="prize-cost">⭐ '+savedTxt+faltanTxt+'</div>'
+      +'<div class="prize-progress"><div class="prize-fill" style="width:'+pct+'%"></div></div>'
+      +'</div>'+btnHtml+'</div>';
   }
   document.getElementById('prizesContainer').innerHTML = html;
 }
 
 function renderResumen() {
-  var dayPts = DAYS.map(function(d,i) {
+  var dayPts = [];
+  for (var i = 0; i < DAYS.length; i++) {
     var day = state.days[i];
-    if (!day.init) return 0; // day not visited yet, skip
-    var earned = 0;
-    var allTasks = [].concat(TASKS.manana, TASKS.dia, TASKS.noche);
-    for (var j = 0; j < allTasks.length; j++) {
-      var t = allTasks[j];
-      var done = !!day.tasks[t.id];
-      if (t.mandatory) { earned += done ? t.pts : -t.pts; }
-      else { if (done) earned += t.pts; }
+    var pts = 0;
+    var allGroups = ['manana','dia','noche'];
+    for (var g = 0; g < allGroups.length; g++) {
+      var tasks = TASKS[allGroups[g]];
+      for (var j = 0; j < tasks.length; j++) {
+        if (day.tasks[tasks[j].id]) pts += tasks[j].pts;
+      }
     }
-    var lost = 0;
     for (var id in day.penalties) {
-      var pen = PENALTIES.find(function(p){ return p.id===id; });
-      if (pen) lost += pen.pts * (day.penalties[id] || 0);
+      var pen = null;
+      for (var k = 0; k < PENALTIES.length; k++) { if (PENALTIES[k].id===id) pen = PENALTIES[k]; }
+      if (pen) pts += pen.pts * (day.penalties[id] || 0);
     }
-    return earned + lost;
-  });
+    dayPts.push(pts);
+  }
 
-  document.getElementById('weekTotal').textContent = dayPts.reduce(function(a,b){return a+b;},0);
+  var total = 0;
+  for (var i = 0; i < dayPts.length; i++) total += dayPts[i];
+  document.getElementById('weekTotal').textContent = total;
 
-  document.getElementById('dailyStrip').innerHTML = DAYS.map(function(d,i){
-    return '<div class="day-dot"><div class="d-label">'+d+'</div><div class="d-circle'+(dayPts[i]?' has':'')+'">'+( dayPts[i] || '—')+'</div></div>';
-  }).join('');
+  var strip = '';
+  for (var i = 0; i < DAYS.length; i++) {
+    strip += '<div class="day-dot"><div class="dl">'+DAYS[i]+'</div><div class="dc'+(dayPts[i]?' has':'')+'">'+( dayPts[i]||'—')+'</div></div>';
+  }
+  document.getElementById('dailyStrip').innerHTML = strip;
 
   var hist = state.history.slice().reverse().slice(0,30);
   var hEl = document.getElementById('histContainer');
   if (!hist.length) { hEl.innerHTML = '<div class="empty">Aún no hay historial 🌱</div>'; return; }
-  hEl.innerHTML = hist.map(function(h){
-    return '<div class="history-item">'
+  var hHtml = '';
+  for (var i = 0; i < hist.length; i++) {
+    var h = hist[i];
+    hHtml += '<div class="hist-item">'
       +'<div class="hist-icon">'+h.icon+'</div>'
       +'<div class="hist-info"><div class="hist-name">'+h.name+'</div><div class="hist-day">'+DAYS[h.day]+'</div></div>'
       +'<div class="hist-pts '+(h.pts>0?'earn':'lose')+'">'+(h.pts>0?'+':'')+h.pts+'</div>'
       +'</div>';
-  }).join('');
+  }
+  hEl.innerHTML = hHtml;
 }
 
 // ── Actions ────────────────────────────────────────────────────────────────
 function selectDay(i) {
   state.currentDay = i;
-  initDay(i);
   saveState(); render();
 }
 
-function toggleTask(group, id, pts, mandatory) {
+function toggleTask(group, id, pts) {
   var d = state.currentDay;
   var wasDone = !!state.days[d].tasks[id];
   state.days[d].tasks[id] = !wasDone;
-  var t = TASKS[group].find(function(x){ return x.id===id; });
+  var tasks = TASKS[group];
+  var t = null;
+  for (var i = 0; i < tasks.length; i++) { if (tasks[i].id===id) t = tasks[i]; }
   if (!wasDone) {
     state.totalPts += pts;
-    state.history.push({ icon:t.icon, name:t.name, pts:pts, day:d, ts:Date.now() });
+    state.history.push({icon:t.icon, name:t.name, pts:pts, day:d, ts:Date.now()});
     showToast('+'+pts+' puntos ⭐');
   } else {
     state.totalPts = Math.max(0, state.totalPts - pts);
@@ -447,24 +509,28 @@ function changePenalty(id, pts, dir) {
   state.days[d].penalties[id] = nv;
   state.totalPts = Math.max(0, state.totalPts + (pts * (nv - cur)));
   if (nv > cur) {
-    var p = PENALTIES.find(function(x){ return x.id===id; });
-    state.history.push({ icon:p.icon, name:p.name, pts:pts, day:d, ts:Date.now() });
+    var p = null;
+    for (var i = 0; i < PENALTIES.length; i++) { if (PENALTIES[i].id===id) p = PENALTIES[i]; }
+    state.history.push({icon:p.icon, name:p.name, pts:pts, day:d, ts:Date.now()});
     showToast(pts+' puntos 😬');
   }
   saveState(); render();
 }
 
+// ── Modal ──────────────────────────────────────────────────────────────────
 var pendingAction = null;
 
-function openModal(icon, title, body, confirmLabel, confirmCls, action) {
+function openModal(icon, title, body, confirmLabel, confirmCls, showInput, action) {
   document.getElementById('modal-icon').textContent = icon;
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-body').textContent = body;
+  var inp = document.getElementById('modal-input');
+  inp.style.display = showInput ? 'block' : 'none';
   var btn = document.getElementById('modal-confirm');
   btn.textContent = confirmLabel;
   btn.className = confirmCls;
   pendingAction = action;
-  btn.onclick = function() { var fn = pendingAction; closeModal(); fn && fn(); };
+  btn.onclick = function(){ var fn = pendingAction; closeModal(); fn && fn(); };
   document.getElementById('modal').classList.add('open');
 }
 
@@ -475,14 +541,14 @@ function closeModal() {
 
 function confirmPrize(i) {
   var p = PRIZES[i];
-  openModal(p.icon,'¿Canjear '+p.name+'?','¡Juan Martín lo logró! Se va a canjear este premio.','🎁 ¡Sí, canjear!','btn-confirm',function(){ redeemPrize(i); });
+  openModal(p.icon,'¿Canjear '+p.name+'?','¡Juan Martín se lo ganó! Se va a canjear este premio.','🎁 ¡Sí!','btn-ok',false,function(){ redeemPrize(i); });
 }
 
 function redeemPrize(i) {
   var p = PRIZES[i];
   if (!state.savings) state.savings = {};
   state.savings[i] = 0;
-  state.history.push({ icon:p.icon, name:'🎁 Premio: '+p.name, pts:0, day:state.currentDay, ts:Date.now() });
+  state.history.push({icon:p.icon, name:'🎁 Premio: '+p.name, pts:0, day:state.currentDay, ts:Date.now()});
   showToast('🎉 ¡'+p.name+' canjeado!');
   saveState(); render();
 }
@@ -492,46 +558,32 @@ function openSave(i) {
   if (!state.savings) state.savings = {};
   var saved = state.savings[i] || 0;
   var maxAbono = Math.min(state.totalPts, p.cost - saved);
-  // Show input modal
-  document.getElementById('modal-icon').textContent = p.icon;
-  document.getElementById('modal-title').textContent = 'Abonar a '+p.name;
-  document.getElementById('modal-body').textContent = 'Tienes '+state.totalPts+' pts. Ya tienes '+saved+' ahorrados. ¿Cuántos quieres abonar? (máx '+maxAbono+')';
-  var btn = document.getElementById('modal-confirm');
-  btn.textContent = '🪙 Abonar';
-  btn.className = 'btn-confirm';
-  // Add input
-  var existingInput = document.getElementById('save-input');
-  if (!existingInput) {
-    var inp = document.createElement('input');
-    inp.id = 'save-input';
-    inp.type = 'number';
-    inp.min = '1';
-    inp.style.cssText = 'width:100%;margin-top:12px;padding:10px;border-radius:12px;border:2px solid #BBDEFB;font-family:Nunito,sans-serif;font-size:1.2rem;font-weight:900;text-align:center;color:#1A237E;';
-    document.getElementById('modal-body').after(inp);
-  }
-  var input = document.getElementById('save-input');
-  input.max = maxAbono;
-  input.value = maxAbono;
-  input.style.display = 'block';
-  pendingAction = function() {
-    var amt = parseInt(document.getElementById('save-input').value) || 0;
-    if (amt <= 0 || amt > maxAbono) { showToast('Cantidad inválida'); return; }
-    state.savings[i] = (state.savings[i] || 0) + amt;
-    state.totalPts = Math.max(0, state.totalPts - amt);
-    state.history.push({ icon:p.icon, name:'🪙 Abono a '+p.name, pts:-amt, day:state.currentDay, ts:Date.now() });
-    showToast('🪙 +'+amt+' pts a '+p.name+'!');
-    saveState(); render();
-  };
-  btn.onclick = function() { var fn = pendingAction; closeModal(); fn && fn(); };
-  document.getElementById('modal').classList.add('open');
+  var inp = document.getElementById('modal-input');
+  inp.max = maxAbono;
+  inp.value = maxAbono;
+  openModal(
+    p.icon,
+    'Abonar a '+p.name,
+    'Tienes '+state.totalPts+' pts disponibles. Ya tienes '+saved+' ahorrados. ¿Cuántos abonamos? (máx '+maxAbono+')',
+    '🪙 Abonar','btn-ok',true,
+    function(){
+      var amt = parseInt(document.getElementById('modal-input').value) || 0;
+      if (amt <= 0 || amt > maxAbono) { showToast('Cantidad inválida'); return; }
+      state.savings[i] = (state.savings[i] || 0) + amt;
+      state.totalPts = Math.max(0, state.totalPts - amt);
+      state.history.push({icon:p.icon, name:'🪙 Abono: '+p.name, pts:-amt, day:state.currentDay, ts:Date.now()});
+      showToast('🪙 '+amt+' pts a '+p.name);
+      saveState(); render();
+    }
+  );
 }
 
 function confirmReset() {
-  openModal('🔄','¿Reiniciar la semana?','Se borran las tareas de esta semana. Los puntos acumulados se mantienen.','Sí, nueva semana','btn-confirm-red',doReset);
+  openModal('🔄','¿Reiniciar la semana?','Se borran las tareas. Los ahorros de premios se mantienen.','Sí, nueva semana','btn-red',false,doReset);
 }
 
 function doReset() {
-  state.days = DAYS.map(function(){ return { tasks:{}, penalties:{}, interacted:{}, init:false }; });
+  state.days = DAYS.map(function(){ return {tasks:{}, penalties:{}}; });
   state.currentDay = todayIdx();
   state.totalPts = 0;
   saveState(); render();
@@ -554,8 +606,6 @@ function showToast(msg) {
 
 document.getElementById('modal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
 
-// Init
-saveState();
 render();
 </script>
 </body>
