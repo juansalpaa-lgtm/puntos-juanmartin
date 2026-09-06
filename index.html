@@ -67,6 +67,8 @@
   .prize-btn.can-afford { background:var(--sun); color:#5D4037; box-shadow:0 3px 10px rgba(255,214,0,.4); }
   .prize-btn.can-afford:active { transform:scale(.95); }
   .prize-btn.cant-afford { background:#F5F5F5; color:#BDBDBD; cursor:not-allowed; }
+  .prize-btn.save-btn { background:#E3F2FD; color:#1565C0; box-shadow:0 3px 10px rgba(21,101,192,.2); }
+  .prize-btn.save-btn:active { transform:scale(.95); }
 
   .week-summary { background:linear-gradient(135deg,#1565C0,#4FC3F7); border-radius:18px; padding:16px; margin-bottom:12px; color:#fff; text-align:center; }
   .week-summary .big { font-size:2.5rem; font-weight:900; color:var(--sun); line-height:1; }
@@ -205,12 +207,15 @@ const PENALTIES = [
 ];
 
 const PRIZES = [
-  { icon:'🍦', name:'Helado',             cost:35,  hint:'' },
-  { icon:'🎮', name:'Nintendo 30 min',    cost:50,  hint:'Solo sábado o domingo' },
-  { icon:'⚡', name:'Pokémon GO 30 min',  cost:60,  hint:'¡Hay que portarse muy bien!' },
-  { icon:'🎬', name:'Película en familia',cost:70,  hint:'' },
-  { icon:'📺', name:'TV 1 hora',          cost:90,  hint:'' },
-  { icon:'🧸', name:'Muñeco Pokémon',     cost:151, hint:'¡Hay que esforzarse mucho! 🌟' },
+  { icon:'🎬', name:'Película',               cost:70   },
+  { icon:'🍦', name:'Plan con familia (helado)', cost:80 },
+  { icon:'👨‍🍳', name:'Capítulo MasterChef',    cost:100  },
+  { icon:'🏙️', name:'Bogotá',                  cost:150  },
+  { icon:'🎮', name:'Nintendo',                cost:180  },
+  { icon:'⚡', name:'Pokémon GO',              cost:180  },
+  { icon:'👫', name:'Plan con amigo',          cost:200  },
+  { icon:'🧸', name:'Mewtwo',                  cost:300  },
+  { icon:'✈️', name:'Estados Unidos',          cost:1000 },
 ];
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -315,23 +320,33 @@ function renderPenalties() {
 }
 
 function renderPrizes() {
+  if (!state.savings) state.savings = {};
   var html = '';
   for (var i = 0; i < PRIZES.length; i++) {
     var p = PRIZES[i];
-    var can = state.totalPts >= p.cost;
-    var pct = Math.min(100, Math.round((state.totalPts / p.cost) * 100));
-    var isLeg = p.cost >= 100;
-    var hintHtml = p.hint ? '<div class="prize-hint">'+p.hint+'</div>' : '';
-    var costTxt = can ? '— ¡Ya puedes!' : '(faltan '+(p.cost-state.totalPts)+' pts)';
-    var btnHtml = can
-      ? '<button class="prize-btn can-afford" onclick="confirmPrize('+i+')">🎁 ¡Canjear!</button>'
-      : '<button class="prize-btn cant-afford" disabled>🔒</button>';
+    var saved = state.savings[i] || 0;
+    var remaining = p.cost - saved;
+    var pct = Math.min(100, Math.round((saved / p.cost) * 100));
+    var isLeg = p.cost >= 300;
+    var canAdd = state.totalPts > 0 && saved < p.cost;
+    var canRedeem = saved >= p.cost;
+    var savedTxt = saved > 0 ? saved+'/'+p.cost+' pts ahorrados' : '0/'+p.cost+' pts';
+    var faltanTxt = saved > 0 ? ' · faltan '+remaining : '';
+
+    var btnHtml = '';
+    if (canRedeem) {
+      btnHtml = '<button class="prize-btn can-afford" onclick="confirmPrize('+i+')">🎁 ¡Canjear!</button>';
+    } else if (canAdd) {
+      btnHtml = '<button class="prize-btn save-btn" onclick="openSave('+i+')">🪙 Abonar</button>';
+    } else {
+      btnHtml = '<button class="prize-btn cant-afford" disabled>🔒</button>';
+    }
+
     html += '<div class="prize-card '+(isLeg?'legendary':'')+'">'
       + '<div class="prize-icon">'+p.icon+'</div>'
       + '<div class="prize-info">'
       + '<div class="prize-name">'+p.name+'</div>'
-      + hintHtml
-      + '<div class="prize-cost">⭐ '+p.cost+' pts '+costTxt+'</div>'
+      + '<div class="prize-cost">⭐ '+savedTxt+faltanTxt+'</div>'
       + '<div class="prize-progress"><div class="prize-progress-fill" style="width:'+pct+'%"></div></div>'
       + '</div>'+btnHtml+'</div>';
   }
@@ -449,16 +464,55 @@ function closeModal() {
 
 function confirmPrize(i) {
   var p = PRIZES[i];
-  openModal(p.icon,'¿Canjear '+p.name+'?','Se van a usar '+p.cost+' puntos. ¡Juan Martín se lo ganó!','🎁 ¡Sí, canjear!','btn-confirm',function(){ redeemPrize(i); });
+  openModal(p.icon,'¿Canjear '+p.name+'?','¡Juan Martín lo logró! Se va a canjear este premio.','🎁 ¡Sí, canjear!','btn-confirm',function(){ redeemPrize(i); });
 }
 
 function redeemPrize(i) {
   var p = PRIZES[i];
-  if (state.totalPts < p.cost) return;
-  state.totalPts -= p.cost;
-  state.history.push({ icon:p.icon, name:'Premio: '+p.name, pts:-p.cost, day:state.currentDay, ts:Date.now() });
-  showToast('🎁 ¡'+p.name+' canjeado!');
+  if (!state.savings) state.savings = {};
+  state.savings[i] = 0;
+  state.history.push({ icon:p.icon, name:'🎁 Premio: '+p.name, pts:0, day:state.currentDay, ts:Date.now() });
+  showToast('🎉 ¡'+p.name+' canjeado!');
   saveState(); render();
+}
+
+function openSave(i) {
+  var p = PRIZES[i];
+  if (!state.savings) state.savings = {};
+  var saved = state.savings[i] || 0;
+  var maxAbono = Math.min(state.totalPts, p.cost - saved);
+  // Show input modal
+  document.getElementById('modal-icon').textContent = p.icon;
+  document.getElementById('modal-title').textContent = 'Abonar a '+p.name;
+  document.getElementById('modal-body').textContent = 'Tienes '+state.totalPts+' pts. Ya tienes '+saved+' ahorrados. ¿Cuántos quieres abonar? (máx '+maxAbono+')';
+  var btn = document.getElementById('modal-confirm');
+  btn.textContent = '🪙 Abonar';
+  btn.className = 'btn-confirm';
+  // Add input
+  var existingInput = document.getElementById('save-input');
+  if (!existingInput) {
+    var inp = document.createElement('input');
+    inp.id = 'save-input';
+    inp.type = 'number';
+    inp.min = '1';
+    inp.style.cssText = 'width:100%;margin-top:12px;padding:10px;border-radius:12px;border:2px solid #BBDEFB;font-family:Nunito,sans-serif;font-size:1.2rem;font-weight:900;text-align:center;color:#1A237E;';
+    document.getElementById('modal-body').after(inp);
+  }
+  var input = document.getElementById('save-input');
+  input.max = maxAbono;
+  input.value = maxAbono;
+  input.style.display = 'block';
+  pendingAction = function() {
+    var amt = parseInt(document.getElementById('save-input').value) || 0;
+    if (amt <= 0 || amt > maxAbono) { showToast('Cantidad inválida'); return; }
+    state.savings[i] = (state.savings[i] || 0) + amt;
+    state.totalPts = Math.max(0, state.totalPts - amt);
+    state.history.push({ icon:p.icon, name:'🪙 Abono a '+p.name, pts:-amt, day:state.currentDay, ts:Date.now() });
+    showToast('🪙 +'+amt+' pts a '+p.name+'!');
+    saveState(); render();
+  };
+  btn.onclick = function() { var fn = pendingAction; closeModal(); fn && fn(); };
+  document.getElementById('modal').classList.add('open');
 }
 
 function confirmReset() {
