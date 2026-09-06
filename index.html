@@ -251,17 +251,6 @@ function todayIdx() {
 function initDay(d) {
   var day = state.days[d];
   if (day.init) return;
-  var allTasks = [].concat(TASKS.manana, TASKS.dia, TASKS.noche);
-  for (var i = 0; i < allTasks.length; i++) {
-    var t = allTasks[i];
-    if (t.mandatory) {
-      // Mark as done visually but DON'T add pts yet
-      // Pts only change when user explicitly toggles
-      if (day.tasks[t.id] === undefined) {
-        day.tasks[t.id] = true;
-      }
-    }
-  }
   day.init = true;
 }
 
@@ -277,6 +266,34 @@ function render() {
   renderPrizes();
   renderResumen();
 }
+
+function renderDays() {
+  document.getElementById('daySel').innerHTML = DAYS.map(function(d,i) {
+    return '<button class="day-btn' + (state.currentDay===i?' active':'') + '" onclick="selectDay('+i+')">'+d+'</button>';
+  }).join('');
+}
+
+function renderGroup(group) {
+  var el = document.getElementById('grp-'+group);
+  if (!el) return;
+  var d = state.currentDay;
+  var tasks = TASKS[group] || [];
+  var html = '';
+  for (var i = 0; i < tasks.length; i++) {
+    var t = tasks[i];
+    if (t.days && t.days.indexOf(d) === -1) continue;
+    var done = !!state.days[d].tasks[t.id];
+    var optHtml = t.mandatory ? '' : ' <span class="opt-label">(opcional)</span>';
+    html += '<div class="task-row '+(done?'done':'')+'" onclick="toggleTask(''+group+'',''+t.id+'','+t.pts+','+t.mandatory+')">'
+      + '<div class="task-icon">'+t.icon+'</div>'
+      + '<div class="task-name">'+t.name+optHtml+'</div>'
+      + '<div class="task-pts pts-earn">+'+t.pts+'</div>'
+      + '<div class="check-circle">'+(done?'✓':'')+'</div>'
+      + '</div>';
+  }
+  el.innerHTML = html;
+}
+
 
 function renderDays() {
   document.getElementById('daySel').innerHTML = DAYS.map(function(d,i) {
@@ -408,40 +425,16 @@ function selectDay(i) {
 
 function toggleTask(group, id, pts, mandatory) {
   var d = state.currentDay;
-  var day = state.days[d];
-  var wasDone = !!day.tasks[id];
-  var wasInteracted = !!day.interacted && !!day.interacted[id];
-  if (!day.interacted) day.interacted = {};
-  day.tasks[id] = !wasDone;
-  day.interacted[id] = true;
+  var wasDone = !!state.days[d].tasks[id];
+  state.days[d].tasks[id] = !wasDone;
   var t = TASKS[group].find(function(x){ return x.id===id; });
-
-  if (mandatory) {
-    if (wasDone) {
-      // unchecking = didn't do it
-      // only lose pts if we had previously gained them (interacted before, or was already checked)
-      if (wasInteracted) {
-        state.totalPts = Math.max(0, state.totalPts - pts);
-        state.history.push({ icon:t.icon, name:'No hizo: '+t.name, pts:-pts, day:d, ts:Date.now() });
-        showToast('-'+pts+' puntos 😬');
-      } else {
-        // first time unchecking a default-checked task: just uncheck, no pts change
-        showToast('Desmarcado');
-      }
-    } else {
-      // checking = did it = gain pts
-      state.totalPts += pts;
-      state.history.push({ icon:t.icon, name:t.name, pts:pts, day:d, ts:Date.now() });
-      showToast('+'+pts+' puntos ⭐');
-    }
+  if (!wasDone) {
+    state.totalPts += pts;
+    state.history.push({ icon:t.icon, name:t.name, pts:pts, day:d, ts:Date.now() });
+    showToast('+'+pts+' puntos ⭐');
   } else {
-    if (!wasDone) {
-      state.totalPts += pts;
-      state.history.push({ icon:t.icon, name:t.name, pts:pts, day:d, ts:Date.now() });
-      showToast('+'+pts+' puntos ⭐');
-    } else {
-      state.totalPts = Math.max(0, state.totalPts - pts);
-    }
+    state.totalPts = Math.max(0, state.totalPts - pts);
+    showToast('-'+pts+' puntos');
   }
   saveState(); render();
 }
